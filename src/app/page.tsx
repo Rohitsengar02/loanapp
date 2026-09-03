@@ -1,69 +1,150 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import WhyChooseUs from "@/components/WhyChooseUs";
+import LoanTypes from "@/components/LoanTypes";
+import EligibilityChecker from "@/components/EligibilityChecker";
+import HowItWorks from "@/components/HowItWorks";
+import AppDownload from "@/components/AppDownload";
+import StatsCounter from "@/components/StatsCounter";
+import Testimonials from "@/components/Testimonials";
+import FaqSection from "@/components/FaqSection";
+import CtaBanner from "@/components/CtaBanner";
+import Footer from "@/components/Footer";
+import EligibilityModal from "@/components/EligibilityModal";
+import RegisterPage from "@/components/RegisterPage";
+import Dashboard from "@/components/Dashboard";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+  const [view, setView] = useState<"landing" | "register" | "dashboard">("landing");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState("Personal Loan");
+
+  const handleOpenCalculator = (loanType?: string) => {
+    if (loanType) setSelectedLoan(loanType);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
+  // 1. FULL REGISTER PAGE VIEW (No pop-up, all steps on page)
+  if (view === "register") {
+    return (
+      <SmoothScroll>
+        <CustomCursor />
+        <RegisterPage
+          onBackToHome={() => {
+            setView("landing");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onGoToDashboard={() => {
+            setView("dashboard");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
         />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </SmoothScroll>
+    );
+  }
+
+  // 2. FULL CUSTOMER DASHBOARD VIEW (Identical to reference screenshot)
+  if (view === "dashboard") {
+    return (
+      <SmoothScroll>
+        <CustomCursor />
+        <Dashboard
+          onBackToHome={() => {
+            setView("landing");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onOpenCalculator={() => handleOpenCalculator()}
+        />
+
+        {/* Loan Calculator Modal accessible from Dashboard */}
+        <EligibilityModal
+          isOpen={modalOpen}
+          onClose={handleCloseModal}
+          defaultLoanType={selectedLoan}
+        />
+      </SmoothScroll>
+    );
+  }
+
+  // 3. LANDING PAGE VIEW
+  return (
+    <SmoothScroll>
+      <CustomCursor />
+
+      <main style={{ minHeight: "100vh", position: "relative" }}>
+        {/* Navigation */}
+        <Navbar
+          onOpenCalculator={() => handleOpenCalculator()}
+          onOpenRegistration={() => {
+            setView("register");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          onGoToDashboard={() => {
+            setView("dashboard");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+
+        {/* Hero Section with "Get Started" CTA */}
+        <Hero
+          onOpenCalculator={() => handleOpenCalculator()}
+          onGetStarted={() => {
+            setView("register");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+
+        {/* Why Choose Us - 6 Value Proposition Cards */}
+        <WhyChooseUs />
+
+        {/* Loan Types - 6 Enriched Loan Categories with Rates */}
+        <LoanTypes onOpenCalculator={handleOpenCalculator} />
+
+        {/* Eligibility Checker - Interactive Dial & Salary Slider */}
+        <EligibilityChecker onOpenCalculator={handleOpenCalculator} />
+
+        {/* How It Works - 3 Step Flow */}
+        <HowItWorks />
+
+        {/* Mobile App Download Banner */}
+        <AppDownload />
+
+        {/* Numbers That Build Trust */}
+        <StatsCounter />
+
+        {/* Testimonials */}
+        <Testimonials />
+
+        {/* FAQ Accordion Section */}
+        <FaqSection />
+
+        {/* Bottom CTA Banner */}
+        <CtaBanner
+          onOpenCalculator={() => {
+            setView("register");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        />
+
+        {/* Complete Footer */}
+        <Footer />
       </main>
-    </div>
+
+      {/* Interactive Loan Eligibility & EMI Calculator Modal */}
+      <EligibilityModal
+        isOpen={modalOpen}
+        onClose={handleCloseModal}
+        defaultLoanType={selectedLoan}
+      />
+    </SmoothScroll>
   );
 }
