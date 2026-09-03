@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ShieldCheck, Zap, Percent, ArrowRight, CheckCircle2, Star, Sparkles } from "lucide-react";
+import { ShieldCheck, Zap, Percent, ArrowRight, CheckCircle2, Star, Sparkles, CreditCard, Clock, UserCheck } from "lucide-react";
 
 interface HeroProps {
   onOpenCalculator: () => void;
@@ -16,6 +16,24 @@ export default function Hero({ onOpenCalculator, onGetStarted }: HeroProps) {
   const ring2Ref = useRef<HTMLDivElement>(null);
   const floatBadge1 = useRef<HTMLDivElement>(null);
   const floatBadge2 = useRef<HTMLDivElement>(null);
+
+  // Phone Mockup multi-screen interactive animated walkthrough
+  const [phoneScreen, setPhoneScreen] = useState<0 | 1 | 2>(0);
+  const [simulatedClick, setSimulatedClick] = useState(false);
+  const [emiPaid, setEmiPaid] = useState(false);
+
+  useEffect(() => {
+    // Auto-cycle through the 3 mobile screens with simulated clicks & loading transitions
+    const timer = setInterval(() => {
+      setSimulatedClick(true);
+      setTimeout(() => {
+        setSimulatedClick(false);
+        setPhoneScreen((prev) => ((prev + 1) % 3) as 0 | 1 | 2);
+      }, 450);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -291,32 +309,64 @@ export default function Hero({ onOpenCalculator, onGetStarted }: HeroProps) {
               </div>
             </div>
 
-            {/* CTAs */}
+            {/* CTAs with animated mouse click & mobile touch indicator */}
             <div
-              className="hero-content-elem"
+              className="hero-content-elem hero-cta-group"
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "16px",
+                gap: "18px",
                 flexWrap: "wrap",
                 marginBottom: "36px",
+                position: "relative",
               }}
             >
-              <button
-                onClick={onGetStarted || onOpenCalculator}
-                className="btn-primary"
-                style={{
-                  padding: "16px 36px",
-                  fontSize: "1.02rem",
-                  fontWeight: 800,
-                }}
-              >
-                Get Started <ArrowRight size={18} />
-              </button>
+              {/* Primary Get Started Button with Animated Mouse Click & Tap Indicator */}
+              <div className="hero-btn-click-wrapper" style={{ position: "relative", display: "inline-block" }}>
+                <button
+                  onClick={onGetStarted || onOpenCalculator}
+                  className="btn-primary hero-btn-animated-click"
+                  style={{
+                    padding: "16px 36px",
+                    fontSize: "1.02rem",
+                    fontWeight: 800,
+                    position: "relative",
+                    overflow: "hidden",
+                  }}
+                >
+                  Get Started <ArrowRight size={18} />
+                  {/* Subtle inner animated sheen wave */}
+                  <span className="hero-btn-click-wave" />
+                </button>
+
+                {/* Animated Mouse Pointer & Tap Hand Indicator */}
+                <div className="hero-mouse-click-indicator">
+                  {/* Tap Ripple Rings */}
+                  <span className="hero-tap-ripple ripple-1" />
+                  <span className="hero-tap-ripple ripple-2" />
+
+                  {/* Mouse Pointer Cursor Icon */}
+                  <div className="hero-cursor-icon">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.36z"
+                        fill="#0F172A"
+                        stroke="#ffffff"
+                        strokeWidth="1.8"
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Micro Tap Badge */}
+                  <div className="hero-tap-badge">
+                    <span>Click</span>
+                  </div>
+                </div>
+              </div>
 
               <button
                 onClick={onOpenCalculator}
-                className="btn-secondary"
+                className="btn-secondary hero-btn-secondary"
                 style={{
                   padding: "16px 32px",
                   fontSize: "1rem",
@@ -589,204 +639,460 @@ export default function Hero({ onOpenCalculator, onGetStarted }: HeroProps) {
                   </div>
                 </div>
 
-                {/* Greeting */}
-                <div style={{ padding: "8px 16px 8px 16px" }}>
-                  <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "#0F172A" }}>
-                    Hello, Rohit 👋
-                  </div>
-                  <div style={{ fontSize: "0.74rem", color: "#64748B", marginTop: "1px" }}>
-                    Here's your loan overview
-                  </div>
-                </div>
-
-                {/* Green Eligible Loan Card */}
-                <div style={{ padding: "0 14px" }}>
-                  <div
-                    style={{
-                      background: "linear-gradient(135deg, #00A669 0%, #007849 100%)",
-                      borderRadius: "18px",
-                      padding: "16px",
-                      color: "#ffffff",
-                      boxShadow: "0 12px 24px -6px rgba(0, 166, 105, 0.45)",
-                    }}
-                  >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: "0.75rem", opacity: 0.95, fontWeight: 500 }}>
-                        Eligible Loan Amount
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "0.62rem",
-                          background: "rgba(255, 255, 255, 0.28)",
-                          padding: "2px 8px",
-                          borderRadius: "10px",
-                          fontWeight: 700,
-                        }}
-                      >
-                        Pre-approved
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        fontSize: "1.75rem",
-                        fontWeight: 900,
-                        margin: "8px 0 12px 0",
-                        letterSpacing: "-0.02em",
-                        color: "#ffffff",
-                      }}
-                    >
-                      ₹5,00,000
-                    </div>
-
-                    <button
-                      onClick={onOpenCalculator}
-                      style={{
-                        width: "100%",
-                        background: "#ffffff",
-                        color: "#007849",
-                        border: "none",
-                        borderRadius: "99px",
-                        padding: "8px",
-                        fontSize: "0.78rem",
-                        fontWeight: 800,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "6px",
-                        cursor: "pointer",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                      }}
-                    >
-                      Check Details <ArrowRight size={13} />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Quick Actions */}
-                <div style={{ padding: "14px 14px 8px 14px" }}>
-                  <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#64748B", marginBottom: "8px" }}>
-                    Quick Actions
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
-                    {[
-                      { label: "Apply Approval", icon: "📝", bg: "#ECFDF5" },
-                      { label: "EMI Calculator", icon: "🧮", bg: "#EFF6FF" },
-                      { label: "Check Eligibility", icon: "✓", bg: "#FDF4FF" },
-                      { label: "Pay EMI", icon: "💳", bg: "#FEF3C7" },
-                    ].map((item, idx) => (
+                {/* Screen Navigation Story Tabs */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "5px",
+                    padding: "6px 14px 2px 14px",
+                  }}
+                >
+                  {[
+                    { label: "1. Offer", screen: 0 },
+                    { label: "2. Disbursal", screen: 1 },
+                    { label: "3. EMI Pay", screen: 2 },
+                  ].map((tab, idx) => {
+                    const isCur = phoneScreen === tab.screen;
+                    return (
                       <div
                         key={idx}
-                        onClick={onOpenCalculator}
+                        onClick={() => setPhoneScreen(tab.screen as 0 | 1 | 2)}
                         style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          textAlign: "center",
+                          flex: 1,
+                          height: "3px",
+                          borderRadius: "99px",
+                          background: isCur ? "var(--primary)" : "#E2E8F0",
                           cursor: "pointer",
+                          transition: "background 0.3s ease",
+                          position: "relative",
+                          overflow: "hidden",
                         }}
                       >
+                        {isCur && (
+                          <div
+                            className="phone-tab-progress"
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              background: "linear-gradient(90deg, #00A669, #10B981)",
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* SCREEN 0: Offer & Dashboard Overview */}
+                {phoneScreen === 0 && (
+                  <div className="phone-screen-fade" style={{ display: "flex", flexDirection: "column", flex: 1, position: "relative" }}>
+                    {/* Greeting */}
+                    <div style={{ padding: "8px 16px 6px 16px" }}>
+                      <div style={{ fontSize: "0.98rem", fontWeight: 800, color: "#0F172A" }}>
+                        Hello, Rohit 👋
+                      </div>
+                      <div style={{ fontSize: "0.74rem", color: "#64748B", marginTop: "1px" }}>
+                        Pre-approved limit ready for disbursal
+                      </div>
+                    </div>
+
+                    {/* Green Eligible Loan Card */}
+                    <div style={{ padding: "0 14px" }}>
+                      <div
+                        style={{
+                          background: "linear-gradient(135deg, #00A669 0%, #007849 100%)",
+                          borderRadius: "18px",
+                          padding: "16px",
+                          color: "#ffffff",
+                          boxShadow: "0 12px 24px -6px rgba(0, 166, 105, 0.45)",
+                          position: "relative",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ fontSize: "0.75rem", opacity: 0.95, fontWeight: 500 }}>
+                            Eligible Loan Amount
+                          </span>
+                          <span
+                            style={{
+                              fontSize: "0.62rem",
+                              background: "rgba(255, 255, 255, 0.28)",
+                              padding: "2px 8px",
+                              borderRadius: "10px",
+                              fontWeight: 700,
+                            }}
+                          >
+                            Pre-approved
+                          </span>
+                        </div>
+
                         <div
                           style={{
-                            width: "42px",
-                            height: "42px",
-                            borderRadius: "12px",
-                            background: item.bg,
+                            fontSize: "1.75rem",
+                            fontWeight: 900,
+                            margin: "8px 0 12px 0",
+                            letterSpacing: "-0.02em",
+                            color: "#ffffff",
+                          }}
+                        >
+                          ₹5,00,000
+                        </div>
+
+                        <button
+                          onClick={() => setPhoneScreen(1)}
+                          style={{
+                            width: "100%",
+                            background: "#ffffff",
+                            color: "#007849",
+                            border: "none",
+                            borderRadius: "99px",
+                            padding: "8px",
+                            fontSize: "0.78rem",
+                            fontWeight: 800,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            fontSize: "1rem",
-                            marginBottom: "4px",
-                            boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+                            gap: "6px",
+                            cursor: "pointer",
+                            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                            transform: simulatedClick ? "scale(0.95)" : "scale(1)",
+                            transition: "transform 0.15s ease",
                           }}
                         >
-                          {item.icon}
-                        </div>
-                        <span style={{ fontSize: "0.62rem", color: "#334155", fontWeight: 700, lineHeight: 1.1 }}>
-                          {item.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                          Instant Disbursal <ArrowRight size={13} />
+                        </button>
 
-                {/* Credit Score Gauge Card */}
-                <div style={{ padding: "0 14px 14px 14px", marginTop: "auto" }}>
-                  <div
-                    style={{
-                      background: "#ffffff",
-                      borderRadius: "16px",
-                      padding: "12px 14px",
-                      border: "1px solid #E2E8F0",
-                      boxShadow: "0 4px 14px rgba(0,0,0,0.03)",
-                    }}
-                  >
-                    <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#475569" }}>
-                      Your Credit Score
+                        {/* Animated Simulated Finger Tap Cursor */}
+                        <div
+                          className="phone-screen-finger-cursor"
+                          style={{
+                            position: "absolute",
+                            bottom: "8px",
+                            right: "30%",
+                            pointerEvents: "none",
+                            zIndex: 20,
+                          }}
+                        >
+                          <span className={`phone-tap-wave ${simulatedClick ? "active" : ""}`} />
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.36z"
+                              fill="#0F172A"
+                              stroke="#ffffff"
+                              strokeWidth="1.8"
+                            />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
+                    {/* Quick Actions */}
+                    <div style={{ padding: "12px 14px 6px 14px" }}>
+                      <div style={{ fontSize: "0.74rem", fontWeight: 700, color: "#64748B", marginBottom: "8px" }}>
+                        Quick Actions
+                      </div>
+                      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
+                        {[
+                          { label: "Apply Loan", icon: "📝", bg: "#ECFDF5", target: 1 },
+                          { label: "EMI Calc", icon: "🧮", bg: "#EFF6FF", target: 2 },
+                          { label: "Eligibility", icon: "✓", bg: "#FDF4FF", target: 0 },
+                          { label: "Pay EMI", icon: "💳", bg: "#FEF3C7", target: 2 },
+                        ].map((item, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => setPhoneScreen(item.target as 0 | 1 | 2)}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              textAlign: "center",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "12px",
+                                background: item.bg,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: "0.95rem",
+                                marginBottom: "4px",
+                                boxShadow: "0 2px 6px rgba(0,0,0,0.04)",
+                              }}
+                            >
+                              {item.icon}
+                            </div>
+                            <span style={{ fontSize: "0.6rem", color: "#334155", fontWeight: 700, lineHeight: 1.1 }}>
+                              {item.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Credit Score Gauge Card */}
+                    <div style={{ padding: "0 14px 12px 14px", marginTop: "auto" }}>
+                      <div
+                        style={{
+                          background: "#ffffff",
+                          borderRadius: "16px",
+                          padding: "10px 14px",
+                          border: "1px solid #E2E8F0",
+                          boxShadow: "0 4px 14px rgba(0,0,0,0.03)",
+                        }}
+                      >
+                        <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#475569" }}>
+                          Your Credit Health
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "4px" }}>
+                          <div style={{ position: "relative", width: "80px", height: "44px" }}>
+                            <svg viewBox="0 0 100 55" width="80" height="44">
+                              <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#E2E8F0" strokeWidth="10" strokeLinecap="round" />
+                              <path d="M 10 50 A 40 40 0 0 1 76 18" fill="none" stroke="url(#phoneGaugeGrad)" strokeWidth="10" strokeLinecap="round" />
+                              <defs>
+                                <linearGradient id="phoneGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                  <stop offset="0%" stopColor="#EF4444" />
+                                  <stop offset="50%" stopColor="#F59E0B" />
+                                  <stop offset="100%" stopColor="#10B981" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <div style={{ fontSize: "1.1rem", fontWeight: 900, color: "#0F172A" }}>
+                              782 <span style={{ fontSize: "0.72rem", color: "#94A3B8", fontWeight: 600 }}>/ 900</span>
+                            </div>
+                            <span style={{ display: "inline-block", background: "#DCFCE7", color: "#15803D", fontSize: "0.62rem", fontWeight: 800, padding: "2px 7px", borderRadius: "6px" }}>
+                              Excellent
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* SCREEN 1: Instant Verification & Disbursal Flow */}
+                {phoneScreen === 1 && (
+                  <div className="phone-screen-fade" style={{ display: "flex", flexDirection: "column", flex: 1, padding: "8px 14px", position: "relative" }}>
+                    {/* Status Badge */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                      <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#0F172A" }}>
+                        Instant Disbursal Flow
+                      </span>
+                      <span style={{ fontSize: "0.62rem", fontWeight: 800, color: "#007A4D", background: "#DCFCE7", padding: "3px 8px", borderRadius: "99px" }}>
+                        ● Live Underwriting
+                      </span>
+                    </div>
+
+                    {/* Bank A/C Target Card */}
                     <div
                       style={{
+                        background: "#F8FAFC",
+                        border: "1.5px solid #E2E8F0",
+                        borderRadius: "14px",
+                        padding: "10px 12px",
+                        marginBottom: "12px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        marginTop: "6px",
                       }}
                     >
-                      <div style={{ position: "relative", width: "84px", height: "48px" }}>
-                        <svg viewBox="0 0 100 55" width="84" height="48">
-                          <path
-                            d="M 10 50 A 40 40 0 0 1 90 50"
-                            fill="none"
-                            stroke="#E2E8F0"
-                            strokeWidth="10"
-                            strokeLinecap="round"
-                          />
-                          <path
-                            d="M 10 50 A 40 40 0 0 1 76 18"
-                            fill="none"
-                            stroke="url(#phoneGaugeGrad)"
-                            strokeWidth="10"
-                            strokeLinecap="round"
-                          />
-                          <defs>
-                            <linearGradient id="phoneGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" stopColor="#EF4444" />
-                              <stop offset="50%" stopColor="#F59E0B" />
-                              <stop offset="100%" stopColor="#10B981" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                      </div>
-
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: "1.15rem", fontWeight: 900, color: "#0F172A" }}>
-                          782 <span style={{ fontSize: "0.75rem", color: "#94A3B8", fontWeight: 600 }}>/ 900</span>
+                      <div>
+                        <div style={{ fontSize: "0.68rem", color: "#64748B" }}>Disbursal Bank Account</div>
+                        <div style={{ fontSize: "0.85rem", fontWeight: 800, color: "#0F172A" }}>
+                          HDFC Bank A/C ...1045
                         </div>
-                        <span
+                      </div>
+                      <span style={{ fontSize: "0.62rem", fontWeight: 800, color: "#00A669", background: "#ECFDF5", padding: "2px 8px", borderRadius: "6px" }}>
+                        Matched ✓
+                      </span>
+                    </div>
+
+                    {/* 3 Verification Checks */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "14px" }}>
+                      {[
+                        { title: "PAN Card ABCDE1234F", sub: "Verified via NSDL Server", done: true },
+                        { title: "UIDAI Aadhaar e-KYC", sub: "Authenticated & Sealed", done: true },
+                        { title: "Bank Penny-Drop Test", sub: "₹1 Credited & Name Verified", done: true },
+                      ].map((chk, cIdx) => (
+                        <div
+                          key={cIdx}
                           style={{
-                            display: "inline-block",
-                            background: "#DCFCE7",
-                            color: "#15803D",
-                            fontSize: "0.64rem",
-                            fontWeight: 800,
-                            padding: "2px 8px",
-                            borderRadius: "6px",
-                            marginTop: "2px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            padding: "8px 10px",
+                            background: "#ffffff",
+                            border: "1px solid #E2E8F0",
+                            borderRadius: "10px",
+                            fontSize: "0.72rem",
                           }}
                         >
-                          Excellent
-                        </span>
+                          <CheckCircle2 size={16} color="var(--primary)" />
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontWeight: 800, color: "#0F172A" }}>{chk.title}</div>
+                            <div style={{ fontSize: "0.62rem", color: "#64748B" }}>{chk.sub}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Disbursal Progress Animation Card */}
+                    <div
+                      style={{
+                        background: "linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%)",
+                        border: "1px solid #A7F3D0",
+                        borderRadius: "14px",
+                        padding: "12px",
+                        marginTop: "auto",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", fontWeight: 800, color: "#065F46", marginBottom: "6px" }}>
+                        <span>Transferring to Account</span>
+                        <span>100% Success</span>
+                      </div>
+                      <div style={{ height: "6px", background: "#A7F3D0", borderRadius: "99px", overflow: "hidden", marginBottom: "8px" }}>
+                        <div
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            background: "linear-gradient(90deg, #00A669, #059669)",
+                            borderRadius: "99px",
+                            animation: "disbursalFill 2s ease forwards",
+                          }}
+                        />
+                      </div>
+                      <div style={{ fontSize: "0.82rem", fontWeight: 900, color: "#065F46", textAlign: "center" }}>
+                        🎉 ₹5,00,000 Disbursed via IMPS!
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* SCREEN 2: Monthly EMI Repayments & Autopay */}
+                {phoneScreen === 2 && (
+                  <div className="phone-screen-fade" style={{ display: "flex", flexDirection: "column", flex: 1, padding: "8px 14px", position: "relative" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                      <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#0F172A" }}>
+                        EMI Repayment Portal
+                      </span>
+                      <span style={{ fontSize: "0.62rem", fontWeight: 800, color: "#2563EB", background: "#EFF6FF", padding: "3px 8px", borderRadius: "99px" }}>
+                        ● Autopay Active
+                      </span>
+                    </div>
+
+                    {/* Active Loan Summary */}
+                    <div
+                      style={{
+                        background: "#ffffff",
+                        border: "1.5px solid #E2E8F0",
+                        borderRadius: "16px",
+                        padding: "14px",
+                        marginBottom: "12px",
+                      }}
+                    >
+                      <div style={{ fontSize: "0.68rem", color: "#64748B" }}>Active Facility</div>
+                      <div style={{ fontSize: "0.92rem", fontWeight: 800, color: "#0F172A", margin: "2px 0 6px 0" }}>
+                        Personal Loan - Bajaj Finserv
+                      </div>
+
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid #F1F5F9", paddingTop: "8px" }}>
+                        <div>
+                          <div style={{ fontSize: "0.64rem", color: "#64748B" }}>Next Installment</div>
+                          <div style={{ fontSize: "1.3rem", fontWeight: 900, color: "#EF4444" }}>
+                            ₹12,007
+                          </div>
+                        </div>
+                        <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "#DC2626", background: "#FEE2E2", padding: "4px 8px", borderRadius: "99px" }}>
+                          Due in 5 Days
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Simulated 1-Click Pay Button with Finger Tap */}
+                    <div style={{ position: "relative", marginBottom: "12px" }}>
+                      <button
+                        onClick={() => {
+                          setEmiPaid(true);
+                          setTimeout(() => setEmiPaid(false), 2500);
+                        }}
+                        style={{
+                          width: "100%",
+                          padding: "12px",
+                          borderRadius: "12px",
+                          background: emiPaid ? "#059669" : "var(--primary)",
+                          color: "#ffffff",
+                          border: "none",
+                          fontSize: "0.82rem",
+                          fontWeight: 800,
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "6px",
+                          boxShadow: "0 4px 12px rgba(0, 166, 105, 0.3)",
+                          transform: simulatedClick ? "scale(0.96)" : "scale(1)",
+                          transition: "all 0.2s ease",
+                        }}
+                      >
+                        {emiPaid ? (
+                          <>✓ Payment Successful • Ref #89102</>
+                        ) : (
+                          <>Pay EMI Now (₹12,007) →</>
+                        )}
+                      </button>
+
+                      {/* Animated Pointer Click */}
+                      <div
+                        className="phone-screen-finger-cursor"
+                        style={{
+                          position: "absolute",
+                          bottom: "4px",
+                          right: "25%",
+                          pointerEvents: "none",
+                          zIndex: 20,
+                        }}
+                      >
+                        <span className={`phone-tap-wave ${simulatedClick ? "active" : ""}`} />
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                          <path
+                            d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87a.5.5 0 0 0 .35-.85L6.35 2.85a.5.5 0 0 0-.85.36z"
+                            fill="#0F172A"
+                            stroke="#ffffff"
+                            strokeWidth="1.8"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Autopay confirmation */}
+                    <div
+                      style={{
+                        background: "#F8FAFC",
+                        borderRadius: "12px",
+                        padding: "8px 10px",
+                        fontSize: "0.68rem",
+                        color: "#475569",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        marginTop: "auto",
+                      }}
+                    >
+                      <CheckCircle2 size={14} color="var(--primary)" />
+                      <span>NACH Mandate configured on HDFC A/C ...1045</span>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
   );
 }
